@@ -7,6 +7,7 @@ This userscript requires [Tampermonkey](https://tampermonkey.net) extension to w
 
 ### 1.0.1
 - lowered max. characters from 80 to 79 because in fact 80 has 81 characters and it blocks the feedback submit button
+- force input change to let the form know it can be submitted
 
 ### 1.0.0
 - initial release

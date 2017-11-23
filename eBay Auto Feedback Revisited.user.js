@@ -62,6 +62,7 @@ function getFeedback(e) {
         var tt = details.slice(details.indexOf('<tt>')+4,details.indexOf('</tt>'));
         var feedback = tt.split('<br>');
         currentCommentInput.value = feedback[0].trim();
+        currentCommentInput.dispatchEvent(new Event('change'));
         currentCommentInput.focus();
       }
     });
