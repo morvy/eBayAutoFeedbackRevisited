@@ -8,24 +8,23 @@
 // @description   Fetches random feedback from The eBay Feedback Generator (http://thesurrealist.co.uk/feedback) and fills in the comment field on eBay feedback pages.
 // @include       https://www.ebay.com/fdbk/*
 // @include       https://www.ebay.co.uk/fdbk/*
-// @version       1.0.1
+// @version       1.0.2
 // @connect       thesurrealist.co.uk
 // @grant         GM_xmlhttpRequest
 // ==/UserScript==
 
-//***Configuration***
+/* Configuration */
 var frivolous = false; //set to true if you want frivolous vocabulary
 var quality   = true;  //set to true to enable content about item quality in message
 var packing   = false; //set to true to enable content about item packaginging in message
 var speed     = false; //set to true to enable content about item speed in message
 var rating    = true;  //set to true to enable content about rating in message
-//******************
 
-//***Init***
+/* Init */
 var commentField = document.querySelectorAll('[name=OVERALL_EXPERIENCE_COMMENT]');
 if(commentField) addCommentLink();
 
-//***Fetch feedback***
+/* Fetch feedback */
 function getFeedback(e) {
   var experience_name = e.target.getAttribute('name').replace(/PARTY/,'OVERALL_EXPERIENCE');
   var commentFieldId = e.target.getAttribute('name').replace(/PARTY/,'pnnComment');
@@ -40,11 +39,14 @@ function getFeedback(e) {
     switch(mood_radio.value) {
       case 'NEGATIVE':
         mood = 'negative';
+        starRating(1);
         break;
       case 'NEUTRAL':
         mood = 'indifferent';
+        starRating(3);
         break;
       default:
+        starRating(5);
         mood = 'positive';
     }
     var currentCommentInput = document.getElementById(commentFieldId);
@@ -69,7 +71,7 @@ function getFeedback(e) {
   }
 }
 
-//***Add new elements to page***
+/* Add new elements to page */
 function addCommentLink() {
   var blocks = document.querySelectorAll('div.feedback_template');
   for(i=0;i<blocks.length;i++) {
@@ -92,5 +94,17 @@ function addCommentLink() {
   var radios = document.querySelectorAll('.rating_radio');
   for(i=0;i<radios.length;i++) {
     radios[i].addEventListener('click',getFeedback,false);
+  }
+}
+
+/* set star rating after selecting feedback type */
+function starRating(s) {
+  var rows = document.querySelectorAll('fieldset.starrating');
+  for(i=0;i<rows.length;i++) {
+    var stars = rows[i].querySelectorAll('input');
+    for(j=0;j<s;j++) {
+      stars[j].checked = true;
+      stars[j].dispatchEvent(new Event('click'));
+    }
   }
 }
